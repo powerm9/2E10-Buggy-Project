@@ -27,11 +27,11 @@ public class Sketch extends PApplet {
         background(0);
         stroke(0);
         noFill();
-
-        laptop = new Client(this, "192.168.117.230", 5204);
+        laptop = new Client(this, "192.168.88.230", 5204);
     }
 
     public void draw() {
+        
         background(0);
         rect(x, y, w, h);
         rect(x2, y2, w2, h2);
