@@ -15,32 +15,48 @@
     float h2 = 100;
     String stop = "stop";
     
+    float x3 = 150;
+    float y3 = 310;
+    float w3 = 200;
+    float h3 = 100;
+    String fire = "FIRE";
+   
     
+    int gobuttoncolor = color(255);
+    int stopbuttoncolor = color(255);
+    int firebuttoncolor = color(255);
+    
+    int changeTime = 200;
+    int click = 0;
+    
+    
+   
     void setup(){
      size(500,500);
      background(245);
      textSize(36);
      stroke(0);
-     
-     
    
-   
-     
      
      myServer = new Server(this, 5204);
     }
 
     void draw(){
-     fill(255);
+ 
+     fill(gobuttoncolor);
      rect(x,y,w,h);
      
+     fill(stopbuttoncolor);
      rect(x2,y2,w2,h2);
      
-     fill(0);
-     text("GO", 225, 110);
-     text("STOP", 210, 245);
-    
+     fill(firebuttoncolor);
+     rect(x3,y3,w3,h3);
      
+     fill(0);
+     
+     text("FIRE",220, 370);
+     text("GO", 225, 110);
+     text("STOP", 210, 245); 
      
      Client thisClient = myServer.available();
      
@@ -50,27 +66,57 @@
          if (whatClientSaid != null) {
            println("Button pressed on phone: " +whatClientSaid);
              if(whatClientSaid.equals(go) ==  true) {
-               stroke(23, 252, 3);
-              
+               click = millis();
+               gobuttoncolor = color(0, 255, 0);
+               
+             }
+             
+             if(whatClientSaid.equals(stop) ==  true) {
+               click = millis();
+               stopbuttoncolor = color(255, 0, 0);
+               
+             }
+             
+              if(whatClientSaid.equals(fire) ==  true) {
+               click = millis();
+               firebuttoncolor = color(255, 139, 15);
+               
              }
          }
-       } 
+       }
+        
+       if(millis() - click > changeTime) {
+         gobuttoncolor = color(255);
+         stopbuttoncolor = color(255);
+         firebuttoncolor = color(255);
+         
+       }
     }
+      
     
     void mouseReleased() {
       if(mouseX>x && mouseX <x+w && mouseY>y && mouseY <y+h){
-       println("Go Button was pressed");
+       println("Go");
+       click = millis();
        myServer.write("Go Button was pressed");
-       stroke(23, 252, 3);
-
+       gobuttoncolor = color(0, 255, 0);
     }
      if(mouseX>x2 && mouseX <x2+w2 && mouseY>y2 && mouseY <y2+h2){
-       println("Stop button was pressed");
+       println("Stop");
+       click = millis();
        myServer.write("Stop button was pressed");
+       stopbuttoncolor = color(255, 0 , 0);
    }
-   
-  }
-   
+    if(mouseX>x3 && mouseX <x3+w3 && mouseY>y3 && mouseY <y3+h3){
+       println("Fire");
+       click = millis();
+       myServer.write("Fire button was pressed!");
+       firebuttoncolor = color(255, 139, 15);
+   }
+    }
+ 
    void serverEvent(Server someServer, Client someClient) {
         println("Phone Connection Successfull: " + someClient.ip());
 }
+
+  
