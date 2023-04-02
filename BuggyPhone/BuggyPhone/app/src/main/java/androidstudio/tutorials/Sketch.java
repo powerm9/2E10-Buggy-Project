@@ -6,12 +6,12 @@ public class Sketch extends PApplet {
     Client laptop;
 
     int x = 300;
-    int y = 800;
+    int y = 300;
     int w = 500;
     int h = 200;
 
     int x2 = 300;
-    int y2 = 600;
+    int y2 = 1000;
     int w2 = 500;
     int h2 = 200;
 
@@ -28,7 +28,7 @@ public class Sketch extends PApplet {
         stroke(0);
         noFill();
 
-        laptop = new Client(this, "192.168.222.230", 5204);
+        laptop = new Client(this, "192.168.117.230", 5204);
     }
 
     public void draw() {
