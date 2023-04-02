@@ -2,39 +2,41 @@
     import processing.net.*;
     Server myServer;
       
-    float x = 100;
+    float x = 150;
     float y = 50;
-    float w = 150;
-    float h = 80;
+    float w = 200;
+    float h = 100;
+    String s;
     String go = "go";
     
     
     void setup(){
      size(500,500);
-     background(255);
+
      stroke(0);
-     noFill();
      
      myServer = new Server(this, 5204);
     }
 
     void draw(){
-     background(255);
+     background(0);
      rect(x,y,w,h);
      fill(255);
      
+     
      Client thisClient = myServer.available();
+     
+     
      if (thisClient !=null) {
        String whatClientSaid = thisClient.readString();
          if (whatClientSaid != null) {
-           println("Message from client: in" +whatClientSaid);
-             if(whatClientSaid =  "go") {
+           println("Button pressed on phone: " +whatClientSaid);
+             if(whatClientSaid.equals(go) ==  true) {
                background(23, 252, 3);
+              
              }
-           
- 
          }
-       }
+       } 
     }
     
     void mouseReleased() {
@@ -46,3 +48,7 @@
        //do stuff 
     }
    }
+   
+   void serverEvent(Server someServer, Client someClient) {
+        println("Phone Connection Successfull: " + someClient.ip());
+}

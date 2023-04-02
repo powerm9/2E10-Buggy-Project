@@ -10,10 +10,16 @@ public class Sketch extends PApplet {
     int w = 500;
     int h = 200;
 
+    int x2 = 300;
+    int y2 = 600;
+    int w2 = 500;
+    int h2 = 200;
+
     String whatServerSaid;
     String go = "go";
+    String stop = "stop";
 
-    public void settings(){
+    public void settings() {
         size(1000, 2000);
     }
 
@@ -28,28 +34,27 @@ public class Sketch extends PApplet {
     public void draw() {
         background(0);
         rect(x, y, w, h);
+        rect(x2, y2, w2, h2);
         fill(255);
         if (laptop.available() > 0) {
             whatServerSaid = laptop.readString();
-            println("message from server: " + whatServerSaid);
+            println("Message from Laptop: " + whatServerSaid);
         }
-
     }
 
     public void mousePressed() {
         if (mouseX > x && mouseX < x + w && mouseY > y && mouseY < y + h) {
             println("Go button pressed");
-            fill(0);
-
             laptop.write(go);
-
-            //do stuff
         }
-
-
+        if (mouseX > x2 && mouseX < x2 + w2 && mouseY > y2 && mouseY < y2 + h2) {
+            println("Stop button was pressed");
+            laptop.write(stop);
+        }
     }
-
 }
+
+
 
 
 
