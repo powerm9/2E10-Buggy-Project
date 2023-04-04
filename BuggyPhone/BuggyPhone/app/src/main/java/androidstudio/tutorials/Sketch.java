@@ -31,8 +31,10 @@ public class Sketch extends PApplet {
     String stop = "stop";
     String fire = "fire";
 
-    int changeTime = 200;
+    int changeTime = 100;
     int click = 0;
+    String status;
+    int statusColor = color(0);
 
     public void settings() {
         size(1000, 2000);
@@ -41,12 +43,16 @@ public class Sketch extends PApplet {
     public void setup() {
         background(245);
         stroke(0);
-        textSize(72);
 
         laptop = new Client(this, "192.168.88.230", 5204);
     }
 
     public void draw() {
+
+        background(245);
+        textSize(72);
+
+
 
         fill(gobuttoncolor);
         rect(x,y,w,h);
@@ -59,11 +65,32 @@ public class Sketch extends PApplet {
 
         fill(0);
 
-
-
         text("GO", 490, 425);
         text("STOP", 460, 725);
         text("FIRE",470, 1025);
+
+        if (laptop.active()){
+            status = "Connected";
+            statusColor = color(0, 255, 0);
+        } else {
+            status = "No Connection";
+            statusColor = color(255, 0 ,255);
+        }
+
+        textSize(36);
+        text("Connection Status: ", 100, 100);
+
+
+        if (status == "Connected") {
+            statusColor = color(0, 255, 0);
+            fill(statusColor);
+        }
+        if (status == "No Connection") {
+            statusColor = color(255, 0, 0);
+            fill(statusColor);
+        }
+        text(status, 520, 200);
+
 
 
         if (laptop.available() > 0) {
@@ -97,7 +124,6 @@ public class Sketch extends PApplet {
             click = millis();
             laptop.write(fire);
             firebuttoncolor = color(255, 139, 15);
-
 
         }
     }

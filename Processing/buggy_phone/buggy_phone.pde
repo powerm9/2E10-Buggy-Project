@@ -6,7 +6,6 @@
     float y = 50;
     float w = 200;
     float h = 100;
-    String s;
     String go = "go";
     
     float x2 = 150;
@@ -19,22 +18,24 @@
     float y3 = 310;
     float w3 = 200;
     float h3 = 100;
-    String fire = "FIRE";
+    String fire = "fire";
    
     
     int gobuttoncolor = color(255);
     int stopbuttoncolor = color(255);
     int firebuttoncolor = color(255);
     
-    int changeTime = 200;
+    int changeTime = 100;
     int click = 0;
+    
+    String status;
+    int statusColor;
+    
     
     
    
     void setup(){
      size(500,500);
-     background(245);
-     textSize(36);
      stroke(0);
    
      
@@ -42,6 +43,8 @@
     }
 
     void draw(){
+     background(245);
+     textSize(36);
  
      fill(gobuttoncolor);
      rect(x,y,w,h);
@@ -54,12 +57,12 @@
      
      fill(0);
      
-     text("FIRE",220, 370);
+     text("FIRE", 220, 370);
      text("GO", 225, 110);
      text("STOP", 210, 245); 
      
      Client thisClient = myServer.available();
-     
+
      
      if (thisClient !=null) {
        String whatClientSaid = thisClient.readString();
@@ -70,14 +73,12 @@
                gobuttoncolor = color(0, 255, 0);
                
              }
-             
              if(whatClientSaid.equals(stop) ==  true) {
                click = millis();
                stopbuttoncolor = color(255, 0, 0);
                
              }
-             
-              if(whatClientSaid.equals(fire) ==  true) {
+             if(whatClientSaid.equals(fire) ==  true) {
                click = millis();
                firebuttoncolor = color(255, 139, 15);
                
@@ -91,6 +92,29 @@
          firebuttoncolor = color(255);
          
        }
+       
+       if (myServer.active()){
+            status = "Connected";
+            statusColor = color(0, 255, 0);
+        } else {
+            status = "No Connection";
+            statusColor = color(255, 0, 0);
+        }
+        
+        textSize(16);
+        text("Connection Status: ", 1, 15);
+
+
+        if (status == "Connected") {
+            statusColor = color(0, 255, 0);
+            fill(statusColor);
+        }
+        if (status == "No Connection") {
+            statusColor = color(255, 0, 0);
+            fill(statusColor);
+        }
+        text(status, 520, 200);
+       
     }
       
     
