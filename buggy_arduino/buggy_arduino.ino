@@ -39,8 +39,6 @@ void setup() {
 void loop() {
   //T
   interrupts();
-
-delay(250);
 Serial.println(c);
 
 distance=afstandssensor.afstandCM();

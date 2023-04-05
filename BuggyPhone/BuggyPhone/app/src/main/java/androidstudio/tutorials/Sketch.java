@@ -20,6 +20,28 @@ public class Sketch extends PApplet {
     int w3 = 500;
     int h3 = 200;
 
+//    int xup = 150;
+//    int yup = 1000;
+//    int wup = 500;
+//    int hup = 200;
+//
+//    int xdown = 150;
+//    int ydown = 1500;
+//    int wdown = 500;
+//    int hdown = 200;
+//
+//    int xleft = 450;
+//    int yleft = 1000;
+//    int wleft = 500;
+//    int hleft = 200;
+//
+//    int xright = 450;
+//    int yright = 1500;
+//    int wright = 500;
+//    int hright = 200;
+
+
+
 
 
     int gobuttoncolor = color(255);
@@ -30,6 +52,11 @@ public class Sketch extends PApplet {
     String go = "go";
     String stop = "stop";
     String fire = "fire";
+
+//    String upTurret = "upTurret";
+//    String downTurret = "downTurret";
+//    String leftTurret = "leftTurret";
+//    String rightTurret = "rightTurret"
 
     int changeTime = 100;
     int click = 0;
@@ -44,7 +71,7 @@ public class Sketch extends PApplet {
         background(245);
         stroke(0);
 
-        laptop = new Client(this, "192.168.215.77", 5204);
+        laptop = new Client(this, "192.168.215.62", 5204);
     }
 
     public void draw() {
@@ -62,6 +89,19 @@ public class Sketch extends PApplet {
 
         fill(firebuttoncolor);
         rect(x3,y3,w3,h3);
+
+//        fill(firebuttoncolor);
+//        rect(xup,yup,wup,hup);
+//
+//        fill(firebuttoncolor);
+//        rect(xdown,ydown,wdown,hdown);
+//
+//        fill(firebuttoncolor);
+//        rect(xleft,yleft,wleft,hleft);
+//
+//        fill(firebuttoncolor);
+//        rect(xright,yright,wright,hright);
+
 
         fill(0);
 
