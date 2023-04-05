@@ -2,21 +2,21 @@
 #include <WiFiNINA.h>
 #include <afstandssensor.h>
 //set pins for ULsensors AfstandsSensor(triggerPin, echoPin);
-AfstandsSensor afstandssensor(13, 9);
+AfstandsSensor afstandssensor(19, 21);
 
 //Wifi setup. Enter password and ssid
-char ssid[] = "VM3541785";
-char pass[] = "Zd3vjfnyh6Mw";
+char ssid[] = "PHONE";
+char pass[] = "laptop123";
 int status = WL_IDLE_STATUS;
-WiFiServer server(80);
+WiFiServer server(5204);
 //Pinouts and interrupts
 void leftM(int direc, int vel);
 void rightM(int direc, int vel);
 //These connect to the IN pins on the H-bridge
-const int Right1 = 16;
-const int Right2 = 17;
-const int Left1 = 18;
-const int Left2 = 19;
+const int Right1 = 10;
+const int Right2 = 9;
+const int Left1 = 5;
+const int Left2 = 6;
 //PWN pins to control speed of each motor
 const int RightSpeed = 11;
 const int LeftSpeed = 12;

@@ -44,7 +44,7 @@ public class Sketch extends PApplet {
         background(245);
         stroke(0);
 
-        laptop = new Client(this, "192.168.88.230", 5204);
+        laptop = new Client(this, "192.168.215.77", 5204);
     }
 
     public void draw() {
@@ -89,7 +89,7 @@ public class Sketch extends PApplet {
             statusColor = color(255, 0, 0);
             fill(statusColor);
         }
-        text(status, 520, 200);
+        text(status, 520, 100);
 
 
 
