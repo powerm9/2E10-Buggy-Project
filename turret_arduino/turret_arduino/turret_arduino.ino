@@ -1,7 +1,11 @@
 #include <Arduino_LSM6DS3.h>
+#include <CheapStepper.h>
+
+CheapStepper stepper (14,15,16,17); 
+boolean moveClockwise = true;
 
 void setup() {
- 
+ stepper.setRpm(10);
  Serial.begin(9600);
   while (!Serial);
 
@@ -31,6 +35,8 @@ void setup() {
 }
 
 void loop() {
-
+moveClockwise = false;
+stepper.moveDegrees (moveClockwise, 90);
+int stepsLeft = stepper.getStepsLeft();
 
 }

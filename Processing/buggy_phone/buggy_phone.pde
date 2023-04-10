@@ -1,6 +1,7 @@
      
     import processing.net.*;
     Server myServer;
+   
       
     float x = 150;
     float y = 50;
@@ -30,8 +31,6 @@
     
     String status;
     int statusColor;
-    
-    
     
    
     void setup(){
@@ -113,7 +112,7 @@
             statusColor = color(255, 0, 0);
             fill(statusColor);
         }
-        text(status, 520, 200);
+        text(status, 130, 15);
        
     }
       
