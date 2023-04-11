@@ -28,12 +28,14 @@ String c="waiting";
 int distance=0;
 bool disState=false;
 
+
+
 void setup() {
   WifiAndPinoutSetup();
   //Interrupts for IR sensors e.g attachInterrupt(digitalPinToInterrupt(pin), function, trigger)
   //The arduino nano 33 iot needs specific pins for this to work. Google interrupt pins
-  attachInterrupt(digitalPinToInterrupt(RightIR), LeftTurn, LOW);
-  attachInterrupt(digitalPinToInterrupt(LeftIR), RightTurn, LOW);
+  attachInterrupt(digitalPinToInterrupt(RightIR), LeftTurn, HIGH);
+  attachInterrupt(digitalPinToInterrupt(LeftIR), RightTurn, HIGH);
 }
 
 void loop() {
