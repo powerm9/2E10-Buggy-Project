@@ -5,47 +5,51 @@ import processing.core.PApplet;
 public class Sketch extends PApplet {
 
     Client laptop;
+    Client arduinospeed;
 
-    int x = 250;
+    int dataspeed;
+    int c;
+
+    int x = 300;
     int y = 300;
     int w = 500;
     int h = 200;
 
-    int x2 = 250;
+    int x2 = 300;
     int y2 = 600;
     int w2 = 500;
     int h2 = 200;
 
-    int x3 = 250;
+    int x3 = 300;
     int y3 = 900;
     int w3 = 500;
     int h3 = 200;
 
-    int turretxup = 25;
-    int turretyup = 1500;
+    int turretxup = 50;
+    int turretyup = 1450;
     int turretwup = 450;
     int turrethup = 200;
 
-    int turretxdown = 525;
-    int turretydown = 1500;
+    int turretxdown = 575;
+    int turretydown = 1450;
     int turretwdown = 450;
     int turrethdown = 200;
 
-    int turretxleft = 25;
-    int turretyleft = 1750;
+    int turretxleft = 50;
+    int turretyleft = 1700;
     int turretwleft = 450;
     int turrethleft = 200;
 
-    int turretxright = 525;
-    int turretyright = 1750;
+    int turretxright = 575;
+    int turretyright = 1700;
     int turretwright = 450;
     int turrethright = 200;
-      int xleft = 25;
-      int yleft = 1200;
-      int wleft = 450;
-      int hleft = 200;
+    int xleft = 50;
+    int yleft = 1200;
+    int wleft = 450;
+    int hleft = 200;
 
-    int xright = 525;
+    int xright = 575;
     int yright = 1200;
     int wright = 450;
     int hright = 200;
@@ -92,14 +96,16 @@ public class Sketch extends PApplet {
 
 
     public void settings() {
-        size(1000, 2000);
+        //size(1000, 2000);
+        fullScreen();
     }
 
     public void setup() {
         background(245);
         stroke(0);
-
-        laptop = new Client(this, "192.168.167.77", 5204);
+        laptop = new Client(this, "192.168.167.77", 5203);
+        //laptop = new Client(this, "192.168.167.77", 5204);
+        arduinospeed = new Client(this, "192.168.167.77", 5203);
     }
 
     public void draw() {
@@ -107,7 +113,9 @@ public class Sketch extends PApplet {
         background(245);
         textSize(72);
 
-
+        if (dataspeed!= -1) {
+            int c = dataspeed;
+        }
 
 
         fill(gobuttoncolor);
@@ -159,7 +167,8 @@ public class Sketch extends PApplet {
         }
 
         textSize(36);
-        text("Connection Status: ", 300, 100);
+        text("Connection Status: ", 175, 50);
+        text("Speed: " + c + " cm/s", 135, 90);
 
 
         if (status == "Connected") {
@@ -171,7 +180,7 @@ public class Sketch extends PApplet {
             fill(statusColor);
         }
 
-        text(status, 600, 100);
+        text(status, 450, 50);
 
 
 

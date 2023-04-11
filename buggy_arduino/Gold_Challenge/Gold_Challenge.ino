@@ -2,7 +2,9 @@
 #include <Arduino_LSM6DS3.h>
 #include <CheapStepper.h>
 #include <Servo.h>
+#include <Encoder.h>
 
+Encoder myEnc(15, 21);
 CheapStepper stepper (14,15,17,18);  
 bool moveClockwise = true;
 Servo myservo;
@@ -12,14 +14,33 @@ char ssid[] = "PHONE";
 char pass[] = "laptop123";
 int status = WL_IDLE_STATUS;
 WiFiServer server(5204);
+WiFiServer serverspeed(5203);
 
 void leftM(int direc, int vel);
 void rightM(int direc, int vel);
 
-const int Right1 = 10;
-const int Right2 = 9;
-const int Left1 = 5;
-const int Left2 = 6;
+unsigned long startMillis;
+unsigned long currentMillis;
+const unsigned long period = 1000;
+double speedstart = 0;
+double newPosition = 0;
+double oldPosition = -999;
+double distancePerStep = 1.25;
+
+//Peters
+// const int Right1 = 10;
+// const int Right2 = 9;
+// const int Left1 = 5;
+// const int Left2 = 6;
+
+//Matthews
+const int Right1 = 9;
+const int Right2 = 5;
+const int Left1 = 16;
+const int Left2 = 17;
+
+
+
 
 const int RightSpeed = 11;
 const int LeftSpeed = 12;
@@ -32,7 +53,6 @@ String prev_c = "waiting";
 String buffer = "waiting";
 
 int click = 0;
-int reverseTimer = 1000;
 int serialTimer = 0;
 
 
@@ -50,28 +70,35 @@ void setup() {
 
 
 void loop() {
- stepper.run();
-  //  if (millis() - serialTimer >= 1000) { 
-  //   Serial.println(c);
-  //   serialTimer = millis();
-  // }
+
+  if (millis() - startMillis >= period){
+    int difference = newPosition - speedstart;
+    serverspeed.write(difference * distancePerStep);      
+  }  
+
+  newPosition = myEnc.read();
+  if(newPosition != oldPosition){
+    oldPosition = newPosition;
+  }
+  
+  stepper.run();
+
   Serial.println(c);
 
   interrupts();
 
-  WiFiClient client = server.available();
+  WiFiClient clientspeed = serverspeed.available();
+  if(clientspeed.connected()) {
+    c = clientspeed.read();
+  }
 
+  WiFiClient client = server.available();
   if (client.connected()){
       Serial.println("Phone command received:");
       client.write("Recieved");
       c = client.read();
   }
 
-  // if (millis() - serialTimer >= 3000) {
-  //   c = "stopAll";
-  //   Serial.println(c);
-  //   serialTimer = millis();
-  // }
 
   if (c == 'G') {
     rightM(2,255);
@@ -79,42 +106,41 @@ void loop() {
   }
 
   if (c == 'S') {
-    leftM(0,0);
-    rightM(0,0);
+   leftM(0,0);
+   rightM(0,0);
   }
  
-    if (c == 'R') {
-    rightM(2,60);
-    leftM(2, 255);
+  if (c == 'R') {
+   rightM(2,60);
+   leftM(2, 255);
   }
 
-  if(c == 'L'){
+  if (c == 'L'){
     rightM(2, 255);
     leftM(2, 60);
   }
 
-  // if (c == "fire") {
-  
-  // }
-    if (c == 'T') {
-         	moveClockwise = false;
-     int stepsLeft = stepper.getStepsLeft();
-     if (stepsLeft == 0){
-  stepper.newMoveDegrees (moveClockwise, 30);
-  delay(50);
-     }
-    
-     c = 'X';
+  if (c == 'F') {
+    Honk();    
+   }
+   
+  if (c == 'T') {
+    moveClockwise = false;
+    int stepsLeft = stepper.getStepsLeft();
+    if (stepsLeft == 0){
+    stepper.newMoveDegrees (moveClockwise, 30);
+    delay(50);
+    }
+    c = 'X';
   }
 
   if(c == 'Y'){
    	moveClockwise = true;
      int stepsLeft = stepper.getStepsLeft();
      if (stepsLeft == 0){
-  stepper.newMoveDegrees (moveClockwise, 30);
-delay(50);
+     stepper.newMoveDegrees (moveClockwise, 30);
+     delay(50);
      }
-     
      c = 'X';
   }
   if (c == 'U') {
@@ -206,3 +232,9 @@ void RightTurn() {
     rightM(2,220);
     leftM(2,60);
 }
+
+void Honk() {
+  digitalWrite(4, HIGH);
+  delay(500);
+  digitalWrite(4, LOW);  
+  }
