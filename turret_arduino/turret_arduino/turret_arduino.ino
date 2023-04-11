@@ -1,76 +1,69 @@
 #include <Arduino_LSM6DS3.h>
 #include <CheapStepper.h>
 #include <Servo.h>
+#include <LCD_I2C.h>
+#include <Encoder.h>
 
-CheapStepper stepper (14,15,17,18);  
-bool moveClockwise = true;
-bool servoChange=true;
-unsigned long moveStartTime = 0;
-
-Servo myservo;
-int pos = 0;
+Encoder myEnc(21, 15);
 unsigned long startMillis;  //some global variables available anywhere in the program
 unsigned long currentMillis;
-const unsigned long period = 3000;
+const unsigned long period = 1000;
+double oldPosition = -999;
+double speedstart = 0;
+double newPosition = 0;
+double distancePerStep = 1.25;
+double prevInput;
+int objectspeed=0;
+String objectspeedshow="0";
+
+LCD_I2C lcd(0x27, 16, 2);
+
+
 
 void setup() {
-  startMillis = millis();
-  myservo.attach(16);
- stepper.setRpm(12);
- stepper.newMoveTo(moveClockwise, 2048);
+ lcd.begin(); // If you are using more I2C devices using the Wire library use lcd.begin(false)
+                 // this stop the library(LCD_I2C) from calling Wire.begin()
+    lcd.backlight();
  Serial.begin(9600);
-
-
-  // if (!IMU.begin()) {
-  //   Serial.println("Failed to initialize IMU!");
-  //   while (1);
-  // }
-
-  // Serial.print("Gyroscope sample rate = ");
-  // Serial.print(IMU.gyroscopeSampleRate());
-  // Serial.println(" Hz");
-  // Serial.println();
-  // Serial.println("Gyroscope in degrees/second");
-  // Serial.println("X\tY\tZ");
-  // float x, y, z;
-
-  // if (IMU.gyroscopeAvailable()) {
-  //   IMU.readGyroscope(x, y, z);
-
-  //   Serial.print(x);
-  //   Serial.print('\t');
-  //   Serial.print(y);
-  //   Serial.print('\t');
-  //   Serial.println(z);
-  // }
-  
 }
-
-void loop() {
+void loop()
+{
   currentMillis = millis();
-  if (currentMillis - startMillis >= period) {
-    Serial.println(servoChange);
-     servoChange=!servoChange;
-    if (servoChange==true){
-  myservo.write(45);  
-    
-    }else if(servoChange==false){
-      myservo.write(10); 
-      
-    }
 
-
-   
+  if (currentMillis - startMillis >= period)
+  {
+    lcd.clear();
+    lcd.setCursor(1,1);
+    int difference = newPosition - speedstart;
+    int objectspeed=difference * distancePerStep;
     startMillis = currentMillis;
-  
+    speedstart = newPosition;
+    objectspeedshow = String(objectspeed);
+    double proj=projDis(45);
+    
+    Serial.println(proj);
+    
+    lcd.setCursor(0, 0);
+     lcd.print("Current speed: "+objectspeedshow); 
+     lcd.setCursor(0, 2);
+     lcd.print("Aim distace:"+String(proj)+"m"); 
+
   }
+
+  newPosition = myEnc.read();
+  if (newPosition != oldPosition) {
+    oldPosition = newPosition;
+  }
+   
   
-  stepper.run();
-
-int stepsLeft = stepper.getStepsLeft();
-if (stepsLeft == 0){
-  moveClockwise = !moveClockwise;
-  stepper.newMoveDegrees (moveClockwise, 180);
 }
 
+double projDis(double angle){
+  double U=5;
+  float distanceTravelled;
+  float time = (U*sin(angle*3.14/180))/(9.81);
+  Serial.println(time);
+  distanceTravelled=U*cos(angle*3.14/180)*time;  
+  return distanceTravelled;
 }
+
