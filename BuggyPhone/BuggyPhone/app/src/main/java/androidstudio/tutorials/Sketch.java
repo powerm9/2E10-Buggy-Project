@@ -68,18 +68,18 @@ public class Sketch extends PApplet {
 
 
     String whatServerSaid;
-    String go = "go";
-    String stop = "stop";
-    String fire = "fire";
+    char go = 'G';
+    char stop = 'S';
+    char fire = 'F';
 
-    String left = "left";
-    String right = "right";
+    char left = 'L';
+    char right = 'R';
 
-    String tLeft = "tleft";
-    String tRight = "tright";
+    char tLeft = 'T';
+    char tRight = 'Y';
 
-    String down = "down";
-    String up = "up";
+    char down = 'D';
+    char up = 'U';
 
 
 

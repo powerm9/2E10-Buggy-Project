@@ -27,7 +27,7 @@ const int LeftSpeed = 12;
 int RightIR = 2;
 int LeftIR = 3;
 
-String c = "waiting";
+char c = 'W';
 String prev_c = "waiting";
 String buffer = "waiting";
 
@@ -64,7 +64,7 @@ void loop() {
   if (client.connected()){
       Serial.println("Phone command received:");
       client.write("Recieved");
-      c = client.readString();
+      c = client.read();
   }
 
   // if (millis() - serialTimer >= 3000) {
@@ -73,59 +73,63 @@ void loop() {
   //   serialTimer = millis();
   // }
 
-  if (c == "go") {
+  if (c == 'G') {
     rightM(2,255);
     leftM(2,255);
   }
 
-  if (c == "stop") {
+  if (c == 'S') {
     leftM(0,0);
     rightM(0,0);
   }
  
-    if (c == "right") {
+    if (c == 'R') {
     rightM(2,60);
     leftM(2, 255);
   }
 
-  if(c == "left"){
+  if(c == 'L'){
     rightM(2, 255);
     leftM(2, 60);
   }
 
-  if (c == "fire") {
+  // if (c == "fire") {
   
-  }
-    if (c == "tleft") {
+  // }
+    if (c == 'T') {
          	moveClockwise = false;
      int stepsLeft = stepper.getStepsLeft();
      if (stepsLeft == 0){
-  stepper.newMoveDegrees (moveClockwise, 20);
+  stepper.newMoveDegrees (moveClockwise, 30);
+  delay(50);
      }
-     c = "stopAll";
+    
+     c = 'X';
   }
 
-  if(c == "tright"){
+  if(c == 'Y'){
    	moveClockwise = true;
      int stepsLeft = stepper.getStepsLeft();
      if (stepsLeft == 0){
-  stepper.newMoveDegrees (moveClockwise, 20);
+  stepper.newMoveDegrees (moveClockwise, 30);
+delay(50);
      }
-     c = "stopAll";
+     
+     c = 'X';
   }
-  if (c == "up") {
+  if (c == 'U') {
     pos=pos+3;
     myservo.write(pos);
-     c = "stopAll";
+     c = 'X';
   }
 
-  if(c == "down"){
+  if(c == 'D'){
   pos=pos-3;
     myservo.write(pos);
-     c = "stopAll";
+     c = 'X';
   }
 
-  if(c == "stopAll"){
+  if(c == 'X'){
     rightM(0, 0);
     leftM(0, 0);
   }
