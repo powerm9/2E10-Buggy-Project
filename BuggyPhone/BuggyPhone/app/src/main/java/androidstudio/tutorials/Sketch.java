@@ -1,5 +1,6 @@
 package androidstudio.tutorials;
 
+
 import processing.core.PApplet;
 public class Sketch extends PApplet {
 
@@ -20,21 +21,30 @@ public class Sketch extends PApplet {
     int w3 = 500;
     int h3 = 200;
 
-//    int xup = 125;
-//    int yup = 1000;
-//    int wup = 500;
-//    int hup = 200;
-//
-//    int xdown = 125;
-//    int ydown = 1500;
-//    int wdown = 500;
-//    int hdown = 200;
-//
+    int turretxup = 25;
+    int turretyup = 1500;
+    int turretwup = 450;
+    int turrethup = 200;
+
+    int turretxdown = 525;
+    int turretydown = 1500;
+    int turretwdown = 450;
+    int turrethdown = 200;
+
+    int turretxleft = 25;
+    int turretyleft = 1750;
+    int turretwleft = 450;
+    int turrethleft = 200;
+
+    int turretxright = 525;
+    int turretyright = 1750;
+    int turretwright = 450;
+    int turrethright = 200;
       int xleft = 25;
       int yleft = 1200;
       int wleft = 450;
       int hleft = 200;
-//
+
     int xright = 525;
     int yright = 1200;
     int wright = 450;
@@ -50,6 +60,13 @@ public class Sketch extends PApplet {
     int leftcontrolbuttoncolor = color(255);
     int rightcontrolbuttoncolor = color(255);
 
+    int turretleftcolor = color(255);
+    int turretrightcolor = color(255);
+    int turretdowncolor = color(255);
+    int turretupcolor = color(255);
+
+
+
     String whatServerSaid;
     String go = "go";
     String stop = "stop";
@@ -58,11 +75,14 @@ public class Sketch extends PApplet {
     String left = "left";
     String right = "right";
 
+    String tLeft = "tleft";
+    String tRight = "tright";
 
-//    String upTurret = "upTurret";
-//    String downTurret = "downTurret";
-//    String leftTurret = "leftTurret";
-//    String rightTurret = "rightTurret"
+    String down = "down";
+    String up = "up";
+
+
+
 
     int changeTime = 100;
     int click = 0;
@@ -79,7 +99,7 @@ public class Sketch extends PApplet {
         background(245);
         stroke(0);
 
-        laptop = new Client(this, "192.168.167.230", 5204);
+        laptop = new Client(this, "192.168.167.77", 5204);
     }
 
     public void draw() {
@@ -105,6 +125,18 @@ public class Sketch extends PApplet {
         fill(rightcontrolbuttoncolor);
         rect(xright, yright, wright, hright);
 
+        fill(turretrightcolor);
+        rect(turretxright, turretyright, turretwright, turrethright);
+
+        fill(turretleftcolor);
+        rect(turretxleft, turretyleft, turretwleft, turrethleft);
+
+        fill(turretdowncolor);
+        rect(turretxdown, turretydown, turretwdown, turrethdown);
+
+        fill(turretupcolor);
+        rect(turretxup, turretyup, turretwup, turrethup);
+
         fill(0);
 
         textAlign(CENTER, CENTER);
@@ -113,6 +145,10 @@ public class Sketch extends PApplet {
         text("FIRE",x3 + w3/2, y3+h3/2);
         text("LEFT", xleft + wleft/2, yleft + hleft/2);
         text("RIGHT", xright + wright/2, yright + hright/2);
+        text("TRIGHT", turretxright + turretwright/2, turretyright + turrethright/2);
+        text("TLEFT", turretxleft + turretwleft/2, turretyleft + turrethleft/2);
+        text("DOWN", turretxdown + turretwdown/2, turretydown + turrethdown/2);
+        text("UP", turretxup + turretwup/2, turretyup + turrethup/2);
 
         if (laptop.active()){
             status = "Connected";
@@ -150,6 +186,10 @@ public class Sketch extends PApplet {
             firebuttoncolor = color(255);
             leftcontrolbuttoncolor = color(255);
             rightcontrolbuttoncolor = color(255);
+            turretleftcolor = color(255);
+            turretdowncolor = color(255);
+            turretupcolor = color(255);
+            turretrightcolor = color(255);
 
         }
     }
@@ -188,5 +228,31 @@ public class Sketch extends PApplet {
             rightcontrolbuttoncolor = color(140, 140, 255);
 
         }
+        if(mouseX>turretxright && mouseX <turretxright+turretwright && mouseY>turretyright && mouseY <turretyright+hright){
+            println("TRIGHT");
+            click = millis();
+            laptop.write(tRight);
+            turretrightcolor = color(140, 140, 255);
+        }
+
+        if(mouseX>turretxleft && mouseX <turretxleft+turretwleft && mouseY>turretyleft && mouseY <turretyleft+hleft){
+            println("TLEFT");
+            click = millis();
+            laptop.write(tLeft);
+            turretleftcolor = color(140, 140, 255);
+        }
+        if(mouseX>turretxdown && mouseX <turretxdown+turretwdown&& mouseY>turretydown && mouseY <turretydown+turrethdown){
+            println("DOWN");
+            click = millis();
+            laptop.write(down);
+            turretdowncolor = color(140, 140, 255);
+        }
+        if(mouseX>turretxup && mouseX <turretxup+turretwup&& mouseY>turretyup && mouseY <turretyup+turrethup){
+            println("UP");
+            click = millis();
+            laptop.write(up);
+            turretupcolor = color(140, 140, 255);
+        }
+
     }
 }
