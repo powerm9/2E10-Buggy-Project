@@ -24,24 +24,14 @@ LCD_I2C lcd(0x27, 16, 2);
 
 
 
-void setup() {Wire.begin();
- lcd.begin(); // If you are using more I2C devices using the Wire library use lcd.begin(false)
-                 // this stop the library(LCD_I2C) from calling Wire.begin()
-    lcd.backlight();
+void setup() {
+
  Serial.begin(9600);
-   while (sensor.wakeup() == false)
-  {
-    Serial.print(millis());
-    Serial.println("\tCould not connect to GY521");
-    delay(1000);
-  }
- sensor.setAccelSensitivity(2);  //  8g
-  sensor.setGyroSensitivity(1);   //  500 degrees/s
-   sensor.setThrottle();
+ 
 }
 void loop()
 {
-  
+  digitalWrite(8, HIGH);
   currentMillis = millis();
 
   if (currentMillis - startMillis >= period)
@@ -85,5 +75,22 @@ double projDis(double angle){
     distanceTravelled=0;
   }
   return distanceTravelled+1;
+}
+
+void startI2cAndFire(){
+ pinMode(8, OUTPUT);
+  Wire.begin();
+ lcd.begin(); // If you are using more I2C devices using the Wire library use lcd.begin(false)
+                 // this stop the library(LCD_I2C) from calling Wire.begin()
+    lcd.backlight();
+   while (sensor.wakeup() == false)
+  {
+    Serial.print(millis());
+    Serial.println("\tCould not connect to GY521");
+    delay(1000);
+  }
+ sensor.setAccelSensitivity(2);  //  8g
+  sensor.setGyroSensitivity(1);   //  500 degrees/s
+   sensor.setThrottle();
 }
 
