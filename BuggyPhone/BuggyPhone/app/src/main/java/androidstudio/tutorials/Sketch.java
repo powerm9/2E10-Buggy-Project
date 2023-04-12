@@ -7,8 +7,8 @@ public class Sketch extends PApplet {
     Client laptop;
 //    Client arduinospeed;
 
-//    int dataspeed;
-//    int c;
+//    int objectspeed = 0;
+
 
     int x = 300;
     int y = 300;
@@ -104,8 +104,9 @@ public class Sketch extends PApplet {
         background(245);
         stroke(0);
         //laptop = new Client(this, "192.168.147.77", 5204);
-        laptop = new Client(this, "192.168.147.77", 5204);
-        //arduinospeed = new Client(this, "192.168.147.77", 5203);
+        laptop = new Client(this, "192.168.147.62", 5204);
+//        arduinospeed = new Client(this, "192.168.147.77", 5203);
+
     }
 
     public void draw() {
@@ -113,9 +114,6 @@ public class Sketch extends PApplet {
         background(245);
         textSize(72);
 
-//        if (dataspeed!= -1) {
-//            int c = dataspeed;
-//        }
 
 
         fill(gobuttoncolor);
@@ -166,9 +164,11 @@ public class Sketch extends PApplet {
             statusColor = color(255, 0 ,255);
         }
 
+//        objectspeed = arduinospeed.read();
+//        println(objectspeed)
         textSize(36);
         text("Connection Status: ", 175, 50);
-//        text("Speed: " + c + " cm/s", 135, 90);
+//        text("Speed: " + objectspeed + " cm/s", 135, 90);
 
 
         if (status == "Connected") {

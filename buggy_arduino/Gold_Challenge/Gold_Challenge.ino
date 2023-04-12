@@ -20,7 +20,7 @@ char ssid[] = "PHONE";
 char pass[] = "laptop123";
 int status = WL_IDLE_STATUS;
 WiFiServer server(5204);
-// WiFiServer serverspeed(5203);
+
 
 void leftM(int direc, int vel);
 void rightM(int direc, int vel);
@@ -88,20 +88,21 @@ void loop() {
     lcd.clear();
     lcd.setCursor(1,1);
     int difference = newPosition - speedstart;
-    int objectspeed=difference * distancePerStep;
+    int objectspeed = difference * distancePerStep;
     startMillis = currentMillis;
     speedstart = newPosition;
     objectspeedshow = String(objectspeed);
 
     sensor.read();
+    // serverspeed.write(objectspeed);
   float x = sensor.getAngleX();
     double proj=projDis(abs(x));
     
     Serial.println(proj);
-    // serverspeed.write(objectspeed);
+    
     
     lcd.setCursor(0, 0);
-     lcd.print("Current speed: "+objectspeedshow); 
+     lcd.print("Current speed:"+objectspeedshow + "cm/s"); 
      lcd.setCursor(0, 2);
      lcd.print("Aim distace:"+String(proj)+"m"); 
 
