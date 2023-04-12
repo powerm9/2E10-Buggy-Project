@@ -41,6 +41,7 @@ void setup() {Wire.begin();
 }
 void loop()
 {
+  
   currentMillis = millis();
 
   if (currentMillis - startMillis >= period)

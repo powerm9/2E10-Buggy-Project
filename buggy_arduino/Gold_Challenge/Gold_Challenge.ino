@@ -5,7 +5,7 @@
 #include <Encoder.h>
 
 Encoder myEnc(15, 21);
-CheapStepper stepper (14,15,17,18);  
+CheapStepper stepper (2,3,4,7);  
 bool moveClockwise = true;
 Servo myservo;
 int pos = 0;
