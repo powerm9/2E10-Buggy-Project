@@ -3,8 +3,14 @@
 #include <CheapStepper.h>
 #include <Servo.h>
 #include <Encoder.h>
+#include <LCD_I2C.h>
+#include "GY521.h"
 
-Encoder myEnc(15, 21);
+GY521 sensor(0x68);
+uint32_t counter = 0;
+LCD_I2C lcd(0x27, 16, 2);
+
+Encoder myEnc(21, 15);
 CheapStepper stepper (2,3,4,7);  
 bool moveClockwise = true;
 Servo myservo;
@@ -14,7 +20,7 @@ char ssid[] = "PHONE";
 char pass[] = "laptop123";
 int status = WL_IDLE_STATUS;
 WiFiServer server(5204);
-WiFiServer serverspeed(5203);
+// WiFiServer serverspeed(5203);
 
 void leftM(int direc, int vel);
 void rightM(int direc, int vel);
@@ -27,17 +33,21 @@ double newPosition = 0;
 double oldPosition = -999;
 double distancePerStep = 1.25;
 
+String objectspeedshow="0";
+int objectspeed=0;
+double prevInput;
+
 //Peters
-// const int Right1 = 10;
-// const int Right2 = 9;
-// const int Left1 = 5;
-// const int Left2 = 6;
+const int Right1 = 10;
+const int Right2 = 9;
+const int Left1 = 5;
+const int Left2 = 6;
 
 //Matthews
-const int Right1 = 9;
-const int Right2 = 5;
-const int Left1 = 16;
-const int Left2 = 17;
+// const int Right1 = 9;
+// const int Right2 = 5;
+// const int Left1 = 16;
+// const int Left2 = 17;
 
 
 
@@ -49,8 +59,7 @@ int RightIR = 2;
 int LeftIR = 3;
 
 char c = 'W';
-String prev_c = "waiting";
-String buffer = "waiting";
+
 
 int click = 0;
 int serialTimer = 0;
@@ -60,21 +69,43 @@ int serialTimer = 0;
 
 void setup() {
   WifiAndPinoutSetup();
-  //Interrupts for IR sensors e.g attachInterrupt(digitalPinToInterrupt(pin), function, trigger)
-  //The arduino nano 33 iot needs specific pins for this to work. Google interrupt pins
+  startI2cAndFire();
+
  myservo.attach(16);
  stepper.setRpm(12);
  stepper.newMoveTo(moveClockwise, 2048);
+
 }
 
 
 
 void loop() {
 
-  if (millis() - startMillis >= period){
+  
+  currentMillis = millis();
+
+  if (currentMillis - startMillis >= period) {
+    lcd.clear();
+    lcd.setCursor(1,1);
     int difference = newPosition - speedstart;
-    serverspeed.write(difference * distancePerStep);      
-  }  
+    int objectspeed=difference * distancePerStep;
+    startMillis = currentMillis;
+    speedstart = newPosition;
+    objectspeedshow = String(objectspeed);
+
+    sensor.read();
+  float x = sensor.getAngleX();
+    double proj=projDis(abs(x));
+    
+    Serial.println(proj);
+    // serverspeed.write(objectspeed);
+    
+    lcd.setCursor(0, 0);
+     lcd.print("Current speed: "+objectspeedshow); 
+     lcd.setCursor(0, 2);
+     lcd.print("Aim distace:"+String(proj)+"m"); 
+
+  }
 
   newPosition = myEnc.read();
   if(newPosition != oldPosition){
@@ -83,14 +114,13 @@ void loop() {
   
   stepper.run();
 
-  Serial.println(c);
+  
 
-  interrupts();
 
-  WiFiClient clientspeed = serverspeed.available();
-  if(clientspeed.connected()) {
-    c = clientspeed.read();
-  }
+  // WiFiClient clientspeed = serverspeed.available();
+  // if(clientspeed.connected()) {
+  //   c = clientspeed.read();
+  // }
 
   WiFiClient client = server.available();
   if (client.connected()){
@@ -101,8 +131,8 @@ void loop() {
 
 
   if (c == 'G') {
-    rightM(2,255);
-    leftM(2,255);
+    rightM(2,155);
+    leftM(2,155);
   }
 
   if (c == 'S') {
@@ -111,17 +141,20 @@ void loop() {
   }
  
   if (c == 'R') {
-   rightM(2,60);
-   leftM(2, 255);
+   rightM(2,100);
+   leftM(2, 155);
   }
 
   if (c == 'L'){
-    rightM(2, 255);
-    leftM(2, 60);
+    rightM(2, 155);
+    leftM(2, 100);
   }
 
   if (c == 'F') {
-    Honk();    
+      digitalWrite(8, HIGH);
+      delay(1000);
+      digitalWrite(8, LOW);
+      c == 'X';
    }
    
   if (c == 'T') {
@@ -224,17 +257,35 @@ void rightM(int direc, int vel) {
   }
 }
 
-void LeftTurn() {
-    rightM(2,60);
-    leftM(2,220);
-}
-void RightTurn() {
-    rightM(2,220);
-    leftM(2,60);
+double projDis(double angle){
+  double U=5;
+  float distanceTravelled;
+  float time = (U*sin(angle*3.14/180))/(9.81);
+  Serial.println(time);
+  distanceTravelled=U*cos(angle*3.14/180)*abs(time);  
+  if (distanceTravelled<0){
+    distanceTravelled=0;
+  }
+  return distanceTravelled+1;
 }
 
-void Honk() {
-  digitalWrite(4, HIGH);
-  delay(500);
-  digitalWrite(4, LOW);  
+
+void startI2cAndFire(){
+ pinMode(8, OUTPUT);
+  Wire.begin();
+ lcd.begin(); // If you are using more I2C devices using the Wire library use lcd.begin(false)
+                 // this stop the library(LCD_I2C) from calling Wire.begin()
+    lcd.backlight();
+   while (sensor.wakeup() == false)
+  {
+    Serial.print(millis());
+    Serial.println("\tCould not connect to GY521");
+    delay(1000);
   }
+ sensor.setAccelSensitivity(2);  //  8g
+  sensor.setGyroSensitivity(1);   //  500 degrees/s
+   sensor.setThrottle();
+}
+
+
+

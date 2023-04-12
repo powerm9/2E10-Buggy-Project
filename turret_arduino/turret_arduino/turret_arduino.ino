@@ -27,10 +27,12 @@ LCD_I2C lcd(0x27, 16, 2);
 void setup() {
 
  Serial.begin(9600);
+ startI2cAndFire();
  
 }
 void loop()
 {
+  
   digitalWrite(8, HIGH);
   currentMillis = millis();
 
@@ -45,7 +47,7 @@ void loop()
     objectspeedshow = String(objectspeed);
 
     sensor.read();
-  float x = sensor.getAngleX();
+    float x = sensor.getAngleX();
     double proj=projDis(abs(x));
     
     Serial.println(proj);
