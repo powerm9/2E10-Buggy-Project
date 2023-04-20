@@ -104,7 +104,7 @@ public class Sketch extends PApplet {
         background(245);
         stroke(0);
         //laptop = new Client(this, "192.168.147.77", 5204);
-        laptop = new Client(this, "192.168.147.62", 5204);
+        laptop = new Client(this, "192.168.164.62", 5204);
 //        arduinospeed = new Client(this, "192.168.147.77", 5203);
 
     }
