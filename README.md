@@ -5,5 +5,7 @@ Main processing phone app work in: BuggyPhone/BuggyPhone/app/src/main/java/andro
 Demo: https://youtu.be/GMDT6vAtgIw
 
 
-		
+Matthew Power
+Peter Han
+Ferdia McGuinness
 
