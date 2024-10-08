@@ -1,267 +1,131 @@
 package androidstudio.tutorials;
 
-
 import processing.core.PApplet;
+
 public class Sketch extends PApplet {
+    Client laptop; // Client for communication
+    Button[] buttons; // Array to hold button instances
+    int click = 0; // Timestamp for button clicks
+    String status; // Connection status message
+    int statusColor = color(0); // Color for the status text
 
-    Client laptop;
-//    Client arduinospeed;
-
-//    int objectspeed = 0;
-
-
-    int x = 300;
-    int y = 300;
-    int w = 500;
-    int h = 200;
-
-    int x2 = 300;
-    int y2 = 600;
-    int w2 = 500;
-    int h2 = 200;
-
-    int x3 = 300;
-    int y3 = 900;
-    int w3 = 500;
-    int h3 = 200;
-
-    int turretxup = 50;
-    int turretyup = 1450;
-    int turretwup = 450;
-    int turrethup = 200;
-
-    int turretxdown = 575;
-    int turretydown = 1450;
-    int turretwdown = 450;
-    int turrethdown = 200;
-
-    int turretxleft = 50;
-    int turretyleft = 1700;
-    int turretwleft = 450;
-    int turrethleft = 200;
-
-    int turretxright = 575;
-    int turretyright = 1700;
-    int turretwright = 450;
-    int turrethright = 200;
-    int xleft = 50;
-    int yleft = 1200;
-    int wleft = 450;
-    int hleft = 200;
-
-    int xright = 575;
-    int yright = 1200;
-    int wright = 450;
-    int hright = 200;
-
-
-
-
-
-    int gobuttoncolor = color(255);
-    int stopbuttoncolor = color(255);
-    int firebuttoncolor = color(255);
-    int leftcontrolbuttoncolor = color(255);
-    int rightcontrolbuttoncolor = color(255);
-
-    int turretleftcolor = color(255);
-    int turretrightcolor = color(255);
-    int turretdowncolor = color(255);
-    int turretupcolor = color(255);
-
-
-
-    String whatServerSaid;
-    char go = 'G';
-    char stop = 'S';
-    char fire = 'F';
-
-    char left = 'L';
-    char right = 'R';
-
-    char tLeft = 'T';
-    char tRight = 'Y';
-
-    char down = 'D';
-    char up = 'U';
-
-
-
-
-    int changeTime = 100;
-    int click = 0;
-    String status;
-    int statusColor = color(0);
-
-
-
+    // Set up the canvas size and orientation
     public void settings() {
-        //size(1000, 2000);
         fullScreen();
     }
 
+    // Initialize settings for the sketch
     public void setup() {
-        background(245);
-        stroke(0);
-        //laptop = new Client(this, "192.168.147.77", 5204);
-        laptop = new Client(this, "192.168.164.62", 5204);
-//        arduinospeed = new Client(this, "192.168.147.77", 5203);
+        background(245); // Set background color
+        stroke(0); // Set stroke color
+        laptop = new Client(this, "192.168.164.62", 5204); // Initialize the client connection
 
+        // Create buttons with positions, labels, commands, and default colors
+        buttons = new Button[]{
+            new Button(300, 300, "GO", 'G', color(255)),
+            new Button(300, 600, "STOP", 'S', color(255)),
+            new Button(300, 900, "FIRE", 'F', color(255)),
+            new Button(50, 1200, "LEFT", 'L', color(255)),
+            new Button(575, 1200, "RIGHT", 'R', color(255)),
+            new Button(50, 1700, "TLEFT", 'T', color(255)),
+            new Button(575, 1700, "TRIGHT", 'Y', color(255)),
+            new Button(575, 1450, "DOWN", 'D', color(255)),
+            new Button(50, 1450, "UP", 'U', color(255))
+        };
     }
 
+    // Main draw loop
     public void draw() {
-
-        background(245);
-        textSize(72);
-
-
-
-        fill(gobuttoncolor);
-        rect(x,y,w,h);
-
-        fill(stopbuttoncolor);
-        rect(x2,y2,w2,h2);
-
-        fill(firebuttoncolor);
-        rect(x3,y3,w3,h3);
-
-        fill(leftcontrolbuttoncolor);
-        rect(xleft, yleft, wleft, hleft);
-
-        fill(rightcontrolbuttoncolor);
-        rect(xright, yright, wright, hright);
-
-        fill(turretrightcolor);
-        rect(turretxright, turretyright, turretwright, turrethright);
-
-        fill(turretleftcolor);
-        rect(turretxleft, turretyleft, turretwleft, turrethleft);
-
-        fill(turretdowncolor);
-        rect(turretxdown, turretydown, turretwdown, turrethdown);
-
-        fill(turretupcolor);
-        rect(turretxup, turretyup, turretwup, turrethup);
-
-        fill(0);
-
-        textAlign(CENTER, CENTER);
-        text("GO", x + w /2, y + h/2);
-        text("STOP", x2 + w2/2, y2+h2/2);
-        text("FIRE",x3 + w3/2, y3+h3/2);
-        text("LEFT", xleft + wleft/2, yleft + hleft/2);
-        text("RIGHT", xright + wright/2, yright + hright/2);
-        text("TRIGHT", turretxright + turretwright/2, turretyright + turrethright/2);
-        text("TLEFT", turretxleft + turretwleft/2, turretyleft + turrethleft/2);
-        text("DOWN", turretxdown + turretwdown/2, turretydown + turrethdown/2);
-        text("UP", turretxup + turretwup/2, turretyup + turrethup/2);
-
-        if (laptop.active()){
-            status = "Connected";
-            statusColor = color(0, 255, 0);
-        } else {
-            status = "No Connection";
-            statusColor = color(255, 0 ,255);
+        background(245); // Clear background
+        for (Button button : buttons) {
+            button.display(); // Draw each button
         }
+        updateConnectionStatus(); // Check and update connection status
+        displayStatus(); // Display connection status on screen
+    }
 
-//        objectspeed = arduinospeed.read();
-//        println(objectspeed)
-        textSize(36);
-        text("Connection Status: ", 175, 50);
-//        text("Speed: " + objectspeed + " cm/s", 135, 90);
+    // Update connection status and color based on laptop's active state
+    private void updateConnectionStatus() {
+        // Check if the laptop connection is active
+        status = laptop.active() ? "Connected" : "No Connection";
+        statusColor = laptop.active() ? color(0, 255, 0) : color(255, 0, 0); // Set color accordingly
+    }
 
+    // Display the current connection status on the screen
+    private void displayStatus() {
+        textSize(36); // Set text size
+        fill(statusColor); // Set fill color for the status text
+        text("Connection Status: " + status, 450, 50); // Draw the status text
 
-        if (status == "Connected") {
-            statusColor = color(0, 255, 0);
-            fill(statusColor);
-        }
-        if (status == "No Connection") {
-            statusColor = color(255, 0, 0);
-            fill(statusColor);
-        }
-
-        text(status, 450, 50);
-
-
-
+        // Read any incoming messages from the laptop
         if (laptop.available() > 0) {
-            whatServerSaid = laptop.readString();
-            println("Message from Laptop: " + whatServerSaid);
+            String message = laptop.readString(); // Read message
+            println("Message from Laptop: " + message); // Print message to console
         }
 
-        if(millis() - click > changeTime) {
-            gobuttoncolor = color(255);
-            stopbuttoncolor = color(255);
-            firebuttoncolor = color(255);
-            leftcontrolbuttoncolor = color(255);
-            rightcontrolbuttoncolor = color(255);
-            turretleftcolor = color(255);
-            turretdowncolor = color(255);
-            turretupcolor = color(255);
-            turretrightcolor = color(255);
+        resetButtonColors(); // Reset button colors if needed
+    }
 
+    // Reset button colors if a certain time has passed since the last click
+    private void resetButtonColors() {
+        if (millis() - click > 100) { // Check if enough time has passed
+            for (Button button : buttons) {
+                button.resetColor(); // Reset button color to default
+            }
         }
     }
 
+    // Check for mouse press events
     public void mousePressed() {
-        if (mouseX > x && mouseX < x + w && mouseY > y && mouseY < y + h) {
-            println("Go");
-            click = millis();
-            laptop.write(go);
-            gobuttoncolor = color(0, 255, 0);
+        // Iterate through buttons and check if any are hovered
+        for (Button button : buttons) {
+            if (button.isHovered(mouseX, mouseY)) {
+                button.action(laptop); // Perform the button action
+                click = millis(); // Update the click timestamp
+            }
         }
-        if (mouseX > x2 && mouseX < x2 + w2 && mouseY > y2 && mouseY < y2 + h2) {
-            println("Stop");
-            click = millis();
-            laptop.write(stop);
-            stopbuttoncolor = color(255, 0 , 0);
-        }
-        if(mouseX>x3 && mouseX <x3+w3 && mouseY>y3 && mouseY <y3+h3){
-            println("Fire");
-            click = millis();
-            laptop.write(fire);
-            firebuttoncolor = color(255, 139, 15);
+    }
 
-        }
-        if(mouseX>xleft && mouseX <xleft+wleft && mouseY>yleft && mouseY <yleft+hleft){
-            println("Left");
-            click = millis();
-            laptop.write(left);
-            leftcontrolbuttoncolor = color(140, 140, 255);
+    // Button class to encapsulate properties and behaviors of a button
+    class Button {
+        int x, y, w = 500, h = 200; // Button position and size
+        String label; // Button label
+        char command; // Command to send on button press
+        int buttonColor; // Current color of the button
 
-        }
-        if(mouseX>xright && mouseX <xright+wright && mouseY>yright && mouseY <yright+hright){
-            println("Right");
-            click = millis();
-            laptop.write(right);
-            rightcontrolbuttoncolor = color(140, 140, 255);
-
-        }
-        if(mouseX>turretxright && mouseX <turretxright+turretwright && mouseY>turretyright && mouseY <turretyright+hright){
-            println("TRIGHT");
-            click = millis();
-            laptop.write(tRight);
-            turretrightcolor = color(140, 140, 255);
+        // Constructor to initialize button properties
+        Button(int x, int y, String label, char command, int buttonColor) {
+            this.x = x;
+            this.y = y;
+            this.label = label;
+            this.command = command;
+            this.buttonColor = buttonColor; // Set initial button color
         }
 
-        if(mouseX>turretxleft && mouseX <turretxleft+turretwleft && mouseY>turretyleft && mouseY <turretyleft+hleft){
-            println("TLEFT");
-            click = millis();
-            laptop.write(tLeft);
-            turretleftcolor = color(140, 140, 255);
-        }
-        if(mouseX>turretxdown && mouseX <turretxdown+turretwdown&& mouseY>turretydown && mouseY <turretydown+turrethdown){
-            println("DOWN");
-            click = millis();
-            laptop.write(down);
-            turretdowncolor = color(140, 140, 255);
-        }
-        if(mouseX>turretxup && mouseX <turretxup+turretwup&& mouseY>turretyup && mouseY <turretyup+turrethup){
-            println("UP");
-            click = millis();
-            laptop.write(up);
-            turretupcolor = color(140, 140, 255);
+        // Display the button on the screen
+        void display() {
+            fill(buttonColor); // Set button fill color
+            rect(x, y, w, h); // Draw the button rectangle
+            fill(0); // Set text color
+            textAlign(CENTER, CENTER); // Center align text
+            text(label, x + w / 2, y + h / 2); // Draw button label
         }
 
+        // Check if the mouse is hovering over the button
+        boolean isHovered(int mouseX, int mouseY) {
+            return mouseX > x && mouseX < x + w && mouseY > y && mouseY < y + h;
+        }
+
+        // Perform the action when the button is pressed
+        void action(Client laptop) {
+            laptop.write(command); // Send command to the laptop
+            buttonColor = color(140, 140, 255); // Change button color on press
+            println(label); // Print button action to console
+        }
+
+        // Reset button color to default
+        void resetColor() {
+            buttonColor = color(255); // Set to default color
+        }
     }
 }
