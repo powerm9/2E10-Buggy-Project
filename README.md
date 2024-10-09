@@ -1,11 +1,12 @@
-2E10 Buggy Project
+# 2E10 Buggy Project
 
-Main processing phone app work in: BuggyPhone/BuggyPhone/app/src/main/java/androidstudio/tutorials/Sketch.java
+## Main Processing Phone App
+- **File Location**: `BuggyPhone/BuggyPhone/app/src/main/java/androidstudio/tutorials/Sketch.java`
 
-Demo: https://youtu.be/GMDT6vAtgIw
+## Demo
+- [Watch the Demo](https://youtu.be/GMDT6vAtgIw)
 
-
-Matthew Power
-Peter Han
-Ferdia McGuinness
-
+## Team Members
+- Matthew Power
+- Peter Han
+- Ferdia McGuinness
